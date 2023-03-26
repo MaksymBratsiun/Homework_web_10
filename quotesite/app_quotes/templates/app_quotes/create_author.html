@@ -2,5 +2,37 @@
 
 {% block content %}
 <h1>Create author</h1>
+{% if form.errors %}
+<div class="alert alert-danger" role="alert">
+    <span>WARRNING!{{ form.non_field_errors }}{{ form.errors }}</span>
+</div>
+{% endif %}
+<form action="{% url 'app_quotes:create_author' %}" method="post">
+    {% csrf_token %}
+    <div class="form-control">
+        <label> Author's name:</label>
+        {{ form.fullname }}
+        <span>{{ form.errors.fullname }}</span>
+    </div>
+    <div class="form-control">
+        <label>Date of born:</label>
+        {{ form.born_date }}
+        <span>{{ form.errors.born_date }}</span>
+    </div>
+    <div class="form-control">
+        <label>Born location:</label>
+        {{ form.born_location }}
+        <span>{{ form.errors.born_location }}</span>
+    </div>
+
+    <div class="form-control">
+        <label class="form-label">Biography</label>
+            {{ form.description }}
+        <span>{{ form.errors.description }}</span>
+    </div>
+    <div class="form-control">
+        <button type="submit" class="btn btn-dark">Create</button>
+    </div>
+</form>
 
 {% endblock %}
