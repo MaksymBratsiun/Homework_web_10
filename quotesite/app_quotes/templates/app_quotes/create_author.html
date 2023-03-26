@@ -4,7 +4,7 @@
 <h1>Create author</h1>
 {% if form.errors %}
 <div class="alert alert-danger" role="alert">
-    <span>WARRNING!{{ form.non_field_errors }}{{ form.errors }}</span>
+    <span>WARNING!{{ form.non_field_errors }}{{ form.errors }}</span>
 </div>
 {% endif %}
 <form action="{% url 'app_quotes:create_author' %}" method="post">

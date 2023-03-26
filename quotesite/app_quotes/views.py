@@ -1,8 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-from .forms import AuthorForm
-from .models import Author, Quote
+from .forms import AuthorForm, TagForm, QuoteForm
+from .models import Author, Quote, Tag
+
+
 # Create your views here.
 
 
@@ -16,6 +18,17 @@ def page(request):
 
 def author(request):
     return render(request, 'app_quotes/author.html', context={'title': 'Quotes'})
+
+
+def tag(request):
+    if request.method == 'POST':
+        form = TagForm(request.POST, instance=Tag())
+        if form.is_valid():
+            form.save()
+            return redirect(to='app_quotes:root')
+        else:
+            return render(request, 'app_quotes/tag.html', {'form': form})
+    return render(request, 'app_quotes/tag.html', {'form': TagForm()})
 
 
 @login_required
@@ -33,8 +46,21 @@ def create_author(request):
 
 @login_required
 def create_quote(request):
-    return render(request, 'app_quotes/create_author', context={'title': 'Quotes'})
-
-
-def search(request):
-    return render(request, 'app_quotes/search.html', context={'title': 'Quotes'})
+    tags = Tag.objects.all()  # noqa
+    authors = Author.objects.all()  # noqa
+    if request.method == 'POST':
+        form = QuoteForm(request.POST, instance=Quote())
+        if form.is_valid():
+            new_quote = form.save(commit=False)
+            choice_tags = Tag.objects.filter(name__in=request.POST.getlist('tags')) # noqa
+            choice_authors = Author.objects.filter(name__in=request.POST.getlist('authors'))  # noqa
+            for tag_ in choice_tags.iterator():
+                new_quote.tags.add(tag_)
+            for author_ in choice_authors.iterator():
+                new_quote.tags.add(author_)
+            new_quote.user = request.user
+            new_quote.save()
+            return redirect(to='app_quotes:root')
+        else:
+            return render(request, 'app_quotes/create_quote.html', {'tags': tags, 'authors': authors, 'form': form})
+    return render(request, 'app_quotes/create_quote.html', {'tags': tags, 'authors': authors, 'form': QuoteForm()})

@@ -2,5 +2,38 @@
 
 {% block content %}
 <h1>Create quote</h1>
-
+{% if form.errors %}
+<div class="alert alert-danger" role="alert">
+    <span>WARNING!{{ form.non_field_errors }}{{ form.errors }}</span>
+</div>
+{% endif %}
+<form action="{% url 'app_quotes:create_quote' %}" method="POST">
+    {% csrf_token %}
+    <div class="form-control">
+        <label> Quote:</label>
+        {{ form.quote }}
+        <span>{{ form.errors.quote }}</span>
+    </div>
+    <div class="form-control">
+        <label>Select author:</label>
+        <select class="form-select" name="authors" required>
+            {% for author in authors %}
+            <option value="{{ author.fullname }}">{{ author.fullname }}</option>
+            {% endfor %}
+        </select>
+        <span>{{ form.errors.tags }}</span>
+    </div>
+    <div class="form-control">
+        <label>Select tags:</label>
+        <select class="form-select" name="tags" multiple required>
+            {% for tag in tags %}
+            <option value="{{tag.name}}">{{ tag.name }}</option>
+            {% endfor %}
+        </select>
+        <span>{{ form.errors.tags }}</span>
+    </div>
+    <div class="form-control">
+        <button type="submit" class="btn btn-dark">Create</button>
+    </div>
+</form>
 {% endblock %}

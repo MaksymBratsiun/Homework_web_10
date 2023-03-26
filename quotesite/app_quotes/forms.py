@@ -1,5 +1,5 @@
-from django.forms import ModelForm, TextInput, CharField, Textarea
-from .models import Author, Quote
+from django.forms import ModelForm, TextInput, CharField, Textarea, ModelChoiceField, ChoiceField
+from .models import Author, Quote, Tag
 
 
 class AuthorForm(ModelForm):
@@ -12,3 +12,24 @@ class AuthorForm(ModelForm):
     class Meta:
         model = Author
         fields = ['fullname', 'born_date', 'born_location', 'description']
+
+
+class TagForm(ModelForm):
+    name = CharField(min_length=3, max_length=25, required=True, widget=TextInput(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = Tag
+        fields = ['name']
+
+
+class QuoteForm(ModelForm):
+    quote = CharField(max_length=1500,
+                      required=True,
+                      widget=Textarea(attrs={'class': 'form-control', 'rows': '3', 'placeholder': 'Input here'}))
+    author = ModelChoiceField(queryset=Author.objects.all(), required=True) # noqa
+
+    class Meta:
+        model = Quote
+        fields = ['quote', 'author']
+        exclude = ['tags']
+

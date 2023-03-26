@@ -11,5 +11,5 @@ urlpatterns = [
     path('author/', views.author, name='author'),
     path('create_author/', views.create_author, name='create_author'),
     path('create_quote/', views.create_quote, name='create_quote'),
-    path('search/', views.search, name='search'),
+    path('tag/', views.tag, name='tag'),
 ]
