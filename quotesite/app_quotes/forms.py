@@ -1,4 +1,5 @@
-from django.forms import ModelForm, TextInput, CharField, Textarea, ModelChoiceField, ChoiceField
+from django.forms import ModelForm, TextInput, CharField, Textarea
+from django.forms import ModelChoiceField, ModelMultipleChoiceField, Select, SelectMultiple
 from .models import Author, Quote, Tag
 
 
@@ -26,10 +27,11 @@ class QuoteForm(ModelForm):
     quote = CharField(max_length=1500,
                       required=True,
                       widget=Textarea(attrs={'class': 'form-control', 'rows': '3', 'placeholder': 'Input here'}))
-    author = ModelChoiceField(queryset=Author.objects.all(), required=True) # noqa
+    author = ModelChoiceField(queryset=Author.objects.all().order_by('fullname'), # noqa
+                              widget=Select(attrs={"class": "form-select"}))
+    tags = ModelMultipleChoiceField(queryset=Tag.objects.all().order_by('name'), # noqa
+                                    widget=SelectMultiple(attrs={"class": "form-select", "size": "7"}))
 
     class Meta:
         model = Quote
-        fields = ['quote', 'author']
-        exclude = ['tags']
-
+        fields = ['quote', 'author', 'tags']

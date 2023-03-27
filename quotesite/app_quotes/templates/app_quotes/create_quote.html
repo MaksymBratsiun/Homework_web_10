@@ -1,39 +1,32 @@
 {% extends "app_quotes/base.html" %}
 
 {% block content %}
-<h1>Create quote</h1>
-{% if form.errors %}
-<div class="alert alert-danger" role="alert">
-    <span>WARNING!{{ form.non_field_errors }}{{ form.errors }}</span>
-</div>
-{% endif %}
-<form action="{% url 'app_quotes:create_quote' %}" method="POST">
-    {% csrf_token %}
-    <div class="form-control">
-        <label> Quote:</label>
-        {{ form.quote }}
-        <span>{{ form.errors.quote }}</span>
-    </div>
-    <div class="form-control">
-        <label>Select author:</label>
-        <select class="form-select" name="authors" required>
-            {% for author in authors %}
-            <option value="{{ author.fullname }}">{{ author.fullname }}</option>
-            {% endfor %}
-        </select>
-        <span>{{ form.errors.tags }}</span>
-    </div>
-    <div class="form-control">
-        <label>Select tags:</label>
-        <select class="form-select" name="tags" multiple required>
-            {% for tag in tags %}
-            <option value="{{tag.name}}">{{ tag.name }}</option>
-            {% endfor %}
-        </select>
-        <span>{{ form.errors.tags }}</span>
-    </div>
-    <div class="form-control">
-        <button type="submit" class="btn btn-dark">Create</button>
-    </div>
-</form>
+    <h1>Create quote</h1>
+    <span><h5>Create author and tags before quote creating and choice from present.</h5></span>
+    {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+            <span>WARNING!{{ form.non_field_errors }}{{ form.errors }}</span>
+        </div>
+    {% endif %}
+    <form action="{% url 'app_quotes:create_quote' %}" method="POST">
+        {% csrf_token %}
+        <div class="form-control">
+            <label> Quote:</label>
+            {{ form.quote }}
+            <span>{{ form.errors.quote }}</span>
+        </div>
+        <div class="form-control">
+            <label>Select author:</label>
+            {{ form.author }}
+            <span>{{ form.errors.author }}</span>
+        </div>
+        <div class="form-control">
+            <label>Select tags:</label>
+            {{ form.tags }}
+            <span>{{ form.errors.tags }}</span>
+        </div>
+        <div class="form-control">
+            <button type="submit" class="btn btn-dark">Create</button>
+        </div>
+    </form>
 {% endblock %}

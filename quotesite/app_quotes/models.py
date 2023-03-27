@@ -15,7 +15,6 @@ class Author(models.Model):
     born_date = models.CharField(max_length=200)
     born_location = models.CharField(max_length=200)
     description = models.CharField(max_length=5000)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
 
     def __str__(self):
         return f'{self.fullname}'
@@ -25,7 +24,6 @@ class Quote(models.Model):
     quote = models.CharField(max_length=1500)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag)
-    user = models.ForeignKey(User, on_delete=models.CASCADE,  default=1)
 
     def __str__(self):
         return f'{self.quote}'

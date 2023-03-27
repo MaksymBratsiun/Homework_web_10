@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import AuthorForm, TagForm, QuoteForm
 from .models import Author, Quote, Tag
@@ -9,15 +9,17 @@ from .models import Author, Quote, Tag
 
 
 def main(request):
-    return render(request, 'app_quotes/index.html', context={'title': 'Quotes'})
+    quotes_ = Quote.objects.all()[:10]
+    return render(request, 'app_quotes/index.html', context={'title': 'Quotes', 'quotes': quotes_})
 
 
 def page(request):
     return render(request, 'app_quotes/page.html', context={'title': 'Quotes'})
 
 
-def author(request):
-    return render(request, 'app_quotes/author.html', context={'title': 'Quotes'})
+def author(request, author_id):
+    author_ = get_object_or_404(Author, pk=author_id)
+    return render(request, 'app_quotes/author.html', {"author": author_})
 
 
 def tag(request):
@@ -37,30 +39,21 @@ def create_author(request):
     if request.method == 'POST':
         form = AuthorForm(request.POST, instance=Author())
         if form.is_valid():
-            res = form.save(commit=False)
-            res.user = request.user
-            res.save()
+            form.save()
             return redirect(to='app_quotes:root')
     return render(request, 'app_quotes/create_author.html', context={'title': 'Quotes', 'form': form})
 
 
 @login_required
 def create_quote(request):
-    tags = Tag.objects.all()  # noqa
-    authors = Author.objects.all()  # noqa
-    if request.method == 'POST':
-        form = QuoteForm(request.POST, instance=Quote())
+    form = QuoteForm()
+    if request.method == "POST":
+        form = QuoteForm(request.POST)
         if form.is_valid():
-            new_quote = form.save(commit=False)
-            choice_tags = Tag.objects.filter(name__in=request.POST.getlist('tags')) # noqa
-            choice_authors = Author.objects.filter(name__in=request.POST.getlist('authors'))  # noqa
-            for tag_ in choice_tags.iterator():
-                new_quote.tags.add(tag_)
-            for author_ in choice_authors.iterator():
-                new_quote.tags.add(author_)
-            new_quote.user = request.user
-            new_quote.save()
+            form.save()
             return redirect(to='app_quotes:root')
         else:
-            return render(request, 'app_quotes/create_quote.html', {'tags': tags, 'authors': authors, 'form': form})
-    return render(request, 'app_quotes/create_quote.html', {'tags': tags, 'authors': authors, 'form': QuoteForm()})
+            return render(request, 'app_quotes/create_quote.html', {'form': form})
+    return render(request, 'app_quotes/create_quote.html', {'form': form})
+
+

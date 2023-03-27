@@ -1,0 +1,15 @@
+{% load extract_tags %}
+{% block content %}
+<div class="form-control px-4 py-3 my-4 md-4 text-left">
+    <div class="">
+        <div class="lead mb-2"> {{quote.quote}}
+        </div>
+        <span class="lead mb-6"> by <a href= '{% url "app_quotes:author" quote.author_id%}' >{{quote.author}}</a>
+        </span>
+        <div class="lead mt-2 mb-4">
+            <p>Tags: {{ quote.tags|tags }} </p>
+        </div>
+    </div>
+</div>
+<div class="b-example-divider"></div>
+{% endblock %}

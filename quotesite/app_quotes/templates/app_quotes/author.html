@@ -1,7 +1,14 @@
 {% extends "app_quotes/base.html" %}
 
 {% block content %}
-<h1>Author</h1>
-
+<div class="form-control">
+    <div class="name fs-4 mt-4 mb-2 px-4">
+        {{author.fullname}}
+    </div>
+    <span class="lead px-4 mb-2">Born: {{author.born_date}} {{author.born_location}}</span>
+    <div class="lead mt-2 fs-5 px-4">Biography:</div>
+    <div class="px-4 py-3">
+        {{author.description}}
+    </div>
+</div>
 {% endblock %}
-
