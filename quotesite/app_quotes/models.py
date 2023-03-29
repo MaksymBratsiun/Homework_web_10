@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class Tag(models.Model):
-    name = models.CharField(max_length=25, null=False, unique=True)
+    name = models.CharField(max_length=60, null=False, unique=True)
 
     def __str__(self):
         return f'{self.name}'
@@ -27,4 +27,3 @@ class Quote(models.Model):
 
     def __str__(self):
         return f'{self.quote}'
-

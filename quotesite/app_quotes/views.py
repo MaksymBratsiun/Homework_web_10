@@ -1,3 +1,6 @@
+import json
+from pathlib import Path
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -57,3 +60,39 @@ def create_quote(request):
     return render(request, 'app_quotes/create_quote.html', {'form': form})
 
 
+def seed_db():
+    seed = input('For seed DB input "Y": ')
+    author_path = Path(__file__).parent / 'sources' / 'authors.json'
+    quotes_path = Path(__file__).parent / 'sources' / 'quotes.json'
+
+    if seed.strip().lower() == 'y':
+
+        with open(quotes_path, 'r') as fh:
+            quotes = json.load(fh)
+
+        with open(author_path, 'r') as fh:
+            authors = json.load(fh)
+        tags = []
+        for quote in quotes:
+            tags.extend(quote.get('tags'))
+        tags = set(tags)
+        tags = list(tags)
+        Tag.objects.all().delete()
+        for _tag in tags:
+            Tag.objects.create(name=_tag)
+
+        Author.objects.all().delete()
+        for author_ in authors:
+            Author.objects.create(fullname=author_.get('fullname'),
+                                  born_date=author_.get('born_date'),
+                                  born_location=author_.get('born_location'),
+                                  description=author_.get('description'), )
+        Quote.objects.all().delete()
+        for quote_ in quotes:
+            quote_temp = Quote.objects.create(quote=quote_.get('quote'),
+                                              author=Author.objects.filter(fullname=quote_.get('author')).first())
+            for tag_name in quote_.get('tags'):
+                quote_temp.tags.add(Tag.objects.filter(name=tag_name).first())
+
+
+# seed_db()

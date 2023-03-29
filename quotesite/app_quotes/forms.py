@@ -1,5 +1,5 @@
 from django.forms import ModelForm, TextInput, CharField, Textarea
-from django.forms import ModelChoiceField, ModelMultipleChoiceField, Select, SelectMultiple
+from django.forms import ModelChoiceField, ModelMultipleChoiceField, Select, SelectMultiple, HiddenInput
 from .models import Author, Quote, Tag
 
 
