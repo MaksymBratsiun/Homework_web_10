@@ -12,4 +12,5 @@ urlpatterns = [
     path('create_author/', views.create_author, name='create_author'),
     path('create_quote/', views.create_quote, name='create_quote'),
     path('tag/', views.tag, name='tag'),
+    path('seed_db', views.seed_db, name='seed_db'),
 ]

@@ -60,7 +60,8 @@ def create_quote(request):
     return render(request, 'app_quotes/create_quote.html', {'form': form})
 
 
-def seed_db():
+@login_required
+def seed_db(request):
     seed = input('For seed DB input "Y": ')
     author_path = Path(__file__).parent / 'sources' / 'authors.json'
     quotes_path = Path(__file__).parent / 'sources' / 'quotes.json'
@@ -93,6 +94,4 @@ def seed_db():
                                               author=Author.objects.filter(fullname=quote_.get('author')).first())
             for tag_name in quote_.get('tags'):
                 quote_temp.tags.add(Tag.objects.filter(name=tag_name).first())
-
-
-# seed_db()
+    return redirect(to='app_quotes:root')
